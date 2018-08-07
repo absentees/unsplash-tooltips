@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>Tooltip test</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+	<script src="https://unpkg.com/v-tooltip"></script>
+	<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+	<style>
+		html,
+		body {
+			padding: 0;
+			margin: 0;
+		}
+
+		body {
+			width: 90%;
+			margin: 40px auto;
+
+
+			/* background-color: black;
+			color: white; */
+			font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+			font-size: 72px;
+			line-height: 1em;
+		}
+	</style>
+</head>
+
+<body>
+	<div id="app">
+		<test v-for="word in spannedMessage" v-bind:text="word"></test>
+	</div>
+	<script>
+		Vue.component('test', {
+			props: ['text'],
+			template: '<span v-tooltip=\"tooltipImage\" @mouseover=\"showTooltip(text)\" v-html=\"text\"></span>',
+			data: function () {
+				return {
+					tooltipImage: ""
+				}
+			},
+			methods: {
+				showTooltip: function (word, event) {
+					// alert(`Clicked: ${word}`);
+					let self = this;
+
+					axios.get('https://api.unsplash.com/search/photos', {
+							params: {
+								client_id: "3ce78981d46bd7faadf3170b3eac2e4eac58c04719dad2f00bf599e4fbc58a07",
+								query: word
+							}
+						})
+						.then(function (response) {
+							// alert(`Clicked: ${response.data.results[0].urls.thumb}`);
+
+							self.tooltipImage = `<img src="${response.data.results[0].urls.thumb}">`;
+
+						})
+						.catch(function (error) {
+							console.log(error);
+						})
+						.then(function () {
+							// always executed
+						});
+
+				}
+			}
+		})
+
+		var app = new Vue({
+			el: '#app',
+			data: {
+				message: 'AI researchers have demonstrated a self-teaching algorithm that gives a robot hand remarkable new dexterity. Their creation taught itself to manipulate a cube with uncanny skill by practicing for the equivalent of a hundred years inside a computer simulation (though only a few days in real time).'
+			},
+			computed: {
+				spannedMessage: function () {
+					// let spanArray = this.message.split(" ").map(function (word) {
+					// 	return `<span v-on:click="showTooltip()">${word}</span>`
+					// }).join(" ");
+
+					return this.message.split(" ").map(function (word) {
+						return word + " ";
+					});
+				}
+			},
+			methods: {
+				showTooltip: function (word, event) {
+					alert(`Clicked: ${word}`);
+				}
+			}
+		});
+	</script>
+</body>
+
+</html>

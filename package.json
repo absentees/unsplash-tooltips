@@ -1,0 +1,13 @@
+{
+	"name": "stock-tooltips",
+	"version": "1.0.0",
+	"main": "index.js",
+	"author": "absentees <scottblissett@gmail.com>",
+	"license": "MIT",
+	"dependencies": {
+		"parcel-bundler": "^1.9.7"
+	},
+	"scripts": {
+		"dev": "parcel serve index.html"
+	}
+}
